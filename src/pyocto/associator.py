@@ -282,9 +282,9 @@ class StationSpecificVelocityModel1D(VelocityModel):
     def to_cpp(self, stations: list[backend.Station]) -> backend.VelocityModel:
 
         model = backend.StationSpecificVelocityModel1D(str(self.path))
-        model.tolerance = self.tolerance
+        model.set_tolerance(self.tolerance)
         if self.association_cutoff_distance is not None:
-            model.association_cutoff_distance = self.association_cutoff_distance
+            model.set_association_cutoff_distance(self.association_cutoff_distance)
         for station in stations:
             model.add_station(station)
         return model
