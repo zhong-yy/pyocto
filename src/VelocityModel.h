@@ -111,8 +111,6 @@ private:
 
 class StationSpecificVelocityModel1D : public VelocityModel {
 public:
-  double tolerance = 1.;
-  double association_cutoff_distance = 1e9;
   std::map<std::string, VelocityModel1D *> models;
   fs::path model_dir;
 
@@ -141,10 +139,10 @@ public:
     }
   }
 
-  // void remove_unused_models() ;
-
 private:
   int n_padding{};
+  double tolerance = 1.;
+  double association_cutoff_distance = 1e9;
 };
 
 } // namespace octoassociator

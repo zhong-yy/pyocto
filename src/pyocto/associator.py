@@ -249,9 +249,9 @@ class VelocityModel1D(VelocityModel):
 class StationSpecificVelocityModel1D(VelocityModel):
     """
     Station specific 1D layered velocity models. PyOcto uses a binary representation of the travel-time tables.
-    For each station, an individual travel time table is calculated, for which the station elevation is considered as the origin in the z axis (pointing downwards, unit: km).
+    For each station, an individual travel time table is calculated, for which the station point is considered as the origin in the z axis (pointing downwards, unit: km).
     To create this representation, please use :py:func:`create_model`. This step only needs
-    to be executed once. A dataframe with a column of station names and a column of elevations (meters above sea level) should be passed to `create_model`. To allow for events above the station elevation, a constant number of padding nodes are added above the station. The thickness of the padding layers of is given by `z_padding_thickness`.
+    to be executed once. Different from :py:meth:`VelocityModel1D.create_model`, :py:func:`create_model` of this class requires a dataframe with a column of station names (column name: id) and a column of elevations in meters above sea level (column name: elevation). To allow for events above the station elevation, a constant number of padding nodes are added above the station. The thickness of the padding layers of is given by `z_padding_thickness`.
 
     .. warning ::
 
@@ -261,12 +261,27 @@ class StationSpecificVelocityModel1D(VelocityModel):
     :param path: Path to the travel-time table
     :param tolerance: Velocity model tolerance in s
     :param association_cutoff_distance: Only use stations up to this distance for space-partitioning association
-    :param surface_p_velocity: P wave velocity used for elevation correction in km/s
-    :param surface_s_velocity: S wave velocity used for elevation correction in km/s
 
     .. warning::
 
-        The VelocityModel1D does currently not allow search spaces above the surface, i.e., negative values of z.
+        The StationSpecificVelocityModel1D only allows search spaces (in z direction) between `[ - station_elevation - z_padding_thickness, zdist - station_elevation]` below sea level. When considering all the stations, the maximum allowed search space is between `[ - min(station_elevation) - z_padding_thickness, zdist - max(station_elevation)]` BSL. When using :py:class:`OctoAssociator`, please choose an appropriate `zlim` within this range.  Here is an illustration of the search space along the depth axis: 
+
+        .. code-block:: text
+
+            o   \\
+            o    } z_padding_thickness
+            o   /
+            V--- Station
+            #  \\                    \\
+            #   } station_elevation  \\
+            #  /                      |
+            X--- Sea level (0m)       |
+            #                          } zdist
+            #                         |
+            #                         |
+            #                        /
+            #                       /
+
     """
 
     def __init__(
@@ -305,10 +320,10 @@ class StationSpecificVelocityModel1D(VelocityModel):
         :param model: DataFrame with columns depth, vp, vs
         :param delta: Grid spacing in kilometer
         :param xdist: Maximum distance in horizontal direction in km
-        :param zdist: Maximum distance in vertical direction in km
+        :param zdist: Maximum distance below a station in vertical direction in km
         :param path: Output path
-        :param z_padding_thickness: Thickness of the padding layers in km
-        :param station: DataFrame with columns id and elevation. Elevation is defined as meters above sea level.
+        :param z_padding_thickness: Thickness of the padding layers above a station in km
+        :param station: DataFrame with two columns: id and elevation. Elevation should be given in meters above sea level.
         """
         try:
             from pyrocko.modelling import eikonal

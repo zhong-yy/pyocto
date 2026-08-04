@@ -340,6 +340,8 @@ bool StationSpecificVelocityModel1D::contains(const Volume &volume,
   auto model_it = models.find(pick->station);
   auto &current_model = model_it->second;
 
+  // Note that we shouldn't use ((current_model->stations).find(pick->station)->second).z here, because 
+  // we have set 0 elevation for stations in each VelocityModel1D* member to disable elevation correction 
   double z_shift = -station.z + n_padding * current_model->get_delta();
   const Volume volume_new_z =
       Volume(volume.x, volume.y, volume.z + z_shift, volume.t, volume.wx,
@@ -372,18 +374,5 @@ double StationSpecificVelocityModel1D::travel_time(const Volume &volume,
              volume.wy, volume.wz, volume.wt);
   return current_model->travel_time(volume_new_z, station, phase);
 }
-
-// void StationSpecificVelocityModel1D::remove_unused_models() {
-//   for (auto it = models.begin(); it != models.end();) {
-//     auto station_it = stations.find(it->first);
-//     if (station_it == stations.end()) {
-//       // if the station is not active, delete the associated travel time
-//       table it = models.erase(
-//           it); // remove it from the map and return the next iterator
-//     } else {
-//       ++it;
-//     }
-//   }
-// }
 
 } // namespace octoassociator

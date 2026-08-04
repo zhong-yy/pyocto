@@ -80,11 +80,7 @@ PYBIND11_MODULE(_core, m) {
       .def(py::init<char *>())
       .def("set_tolerance", &StationSpecificVelocityModel1D::set_tolerance)
       .def("set_association_cutoff_distance",
-           &StationSpecificVelocityModel1D::set_association_cutoff_distance)
-      .def_readwrite(
-          "association_cutoff_distance",
-          &StationSpecificVelocityModel1D::association_cutoff_distance)
-      .def_readwrite("tolerance", &StationSpecificVelocityModel1D::tolerance);
+           &StationSpecificVelocityModel1D::set_association_cutoff_distance);
 
   py::class_<Pick>(m, "Pick")
       .def(py::init<int, double, std::string, char>())
