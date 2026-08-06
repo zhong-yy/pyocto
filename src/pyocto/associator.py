@@ -258,13 +258,9 @@ class StationSpecificVelocityModel1D(VelocityModel):
         The 1D model should always be larger than the search domain diagonal. Otherwise, the location algorithm might
         run into minimization errors.
 
-    :param path: Path to the travel-time table
-    :param tolerance: Velocity model tolerance in s
-    :param association_cutoff_distance: Only use stations up to this distance for space-partitioning association
-
     .. warning::
 
-        The StationSpecificVelocityModel1D only allows search spaces (in z direction) between `[ - station_elevation - z_padding_thickness, zdist - station_elevation]` below sea level. When considering all the stations, the maximum allowed search space is between `[ - min(station_elevation) - z_padding_thickness, zdist - max(station_elevation)]` BSL. When using :py:class:`OctoAssociator`, please choose an appropriate `zlim` within this range.  Here is an illustration of the search space along the depth axis: 
+        The StationSpecificVelocityModel1D only allows search spaces (in z direction) between `[ - station_elevation - z_padding_thickness, zdist - station_elevation]` below sea level. When considering all the stations, the maximum allowed search space is between `[ - min(station_elevation) - z_padding_thickness, zdist - max(station_elevation)]` BSL. When using :py:class:`OctoAssociator`, please choose an appropriate `zlim` within this range.  Here is an illustration of the search space along the depth axis:
 
         .. code-block:: text
 
@@ -281,6 +277,10 @@ class StationSpecificVelocityModel1D(VelocityModel):
             #                         |
             #                        /
             #                       /
+
+    :param path: Path to the travel-time table
+    :param tolerance: Velocity model tolerance in s
+    :param association_cutoff_distance: Only use stations up to this distance for space-partitioning association
 
     """
 
