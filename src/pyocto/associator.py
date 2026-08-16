@@ -149,8 +149,10 @@ class VelocityModel1D(VelocityModel):
                 "Please install the package and try again."
             )
 
-        nx = int(xdist / delta)
-        nz = int(zdist / delta)
+        # Since velocities and travel times are modelled at grid nodes,
+        # instead of cell centers, +1 is used to include the last node
+        nx = int(xdist / delta) + 1
+        nz = int(zdist / delta) + 1
 
         p_speeds = np.ones((nx, nz))
         p_times = -np.ones_like(p_speeds)
@@ -335,8 +337,8 @@ class StationSpecificVelocityModel1D(VelocityModel):
         path = Path(path)
         path.mkdir(parents=True, exist_ok=True)
         n_padding = int(np.ceil(z_padding_thickness / delta))
-        nx = int(xdist / delta)
-        nz = int(zdist / delta) + n_padding
+        nx = int(xdist / delta) + 1
+        nz = int(zdist / delta) + 1 + n_padding
         zdist = zdist + n_padding * delta
         for station_id, elevation in zip(station["id"], station["elevation"]):
             p_speeds = np.ones((nx, nz))
