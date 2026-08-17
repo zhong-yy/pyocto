@@ -25,3 +25,8 @@ decent catalog.
     :members:
     :undoc-members:
     :show-inheritance:
+
+.. autoclass:: pyocto.associator.StationSpecificVelocityModel1D
+    :members:
+    :undoc-members:
+    :show-inheritance:
