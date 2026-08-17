@@ -1,9 +1,20 @@
 set(CMAKE_CXX_STANDARD 17)
-SET(CMAKE_CXX_FLAGS -pthread)
+
+# Platform-specific compiler flags
+if(NOT MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+endif()
+
+# Enable exception handling for MSVC (required for pybind11)
+if(MSVC)
+    add_compile_options(/EHsc)
+endif()
+
+set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15" CACHE STRING "Minimum macOS deployment target")
 
 include_directories(src)
 
-cmake_minimum_required(VERSION 3.4...3.18)
+cmake_minimum_required(VERSION 3.15)
 project(_core LANGUAGES CXX)
 
 add_subdirectory(extern/pybind11)
